@@ -1,0 +1,153 @@
+#######################################################pytest#############################################
+
+test.py
+
+import math
+import pytest
+
+@pytest.mark.num
+def testnum_check():
+    num=25
+    assert num==25
+@pytest.mark.num
+def test_square_check():
+    num=25
+    assert math.sqrt(25) == 5
+@pytest.mark.str
+def test_string_check():
+    name="Anurag"
+    assert name == "Anurag"
+
+
+1)	pytest First.py
+	(Execute all test cases of function name starting with test)
+
+2) 	pytest -k square test.py
+	(execute the tests containing a string in its name)
+
+3)	pytest -m num test.py
+	(execute the tests with marker)
+
+4)	pytest -v
+	(execute all the file in the current directory)
+	
+5)	pytest --maxfail <num> test.py
+	(stop the execution of test suite soon after n number of test fails)
+	
+6)	pytest -n <no of test case to run parallel>          <<-----  pip install pytest-xdist
+	
+7)	pytest --junitxml="result.xml" test.py
+	(generate the details of the test execution in an xml file)
+	
+8)	pytest --html=log.html test.py						 <<-----	pip install pytest-html
+	(generate the details of the test execution in an html file)
+
+##########################################################################################################
+
+Fixture - Fixtures are used to feed some data to the tests such as database connections, URLs to test and some sort of input data.
+
+import math
+import pytest
+
+@pytest.fixture
+def input_value():
+    num = 25
+    return num
+
+@pytest.mark.num
+def testnum_check(input_value):
+    assert input_value == 25
+
+@pytest.mark.num
+def test_square_check(input_value):
+    assert math.sqrt(input_value) == 5
+	
+##########################################################################################################
+
+conftest.py
+
+import pytest
+
+@pytest.fixture
+def input_value():
+    num = 25
+    return num
+
+(The tests will look for fixture in the same file. As the fixture is not found in the file, it will check for fixture in conftest.py file. On finding it, the fixture method is invoked and the result is returned to the input argument of the test.)
+##########################################################################################################
+
+parameterize
+
+import pytest
+
+@pytest.mark.parametrize("num,output",[(1,5),(2,10),(3,15)])
+def test_multiple_of_5_check(num,output):
+    assert num * 5 == output
+
+##########################################################################################################
+
+xfail/xpass/skip
+
+import  pytest
+
+@pytest.mark.xfail
+def test_greater_than():
+    num=10
+    assert num>50
+
+@pytest.mark.xfail
+def test_less_than():
+    num=10
+    assert num<50
+
+@pytest.mark.skip
+def test_less_than_equal_to():
+    num=10
+    assert num<=50
+
+@pytest.mark.skipif(25>0,reason='skip as 25>0')
+def test_skip_if():
+    assert 25 < 0
+
+##########################################################################################################
+
+Pytest class
+
+import math
+import  pytest
+
+@pytest.mark.parametrize("num1,num2",[(5,5),(1,1),(2,4)])
+class TestClass:
+    def test_num_check(self,num1,num2):
+        assert num1==num2
+
+    def test_square_root_check(self,num1,num2):
+        assert math.sqrt(num1) == math.sqrt(num2)
+
+    def test_cube_check(self,num1,num2):
+        assert num1**3 == num2**3
+
+@pytest.mark.parametrize("name",["Anurag","Jain","Calsoft"])
+class TestClass2:
+    def test_name_check(self,name):
+        assert name in "Anurag Jain"
+
+##########################################################################################################
+
+Installing pytest..
+Identifying test files and test functions.
+Executing all test files using pytest –v.
+Executing specific file usimng pytest <filename> -v.
+Execute tests by substring matching pytest -k <substring> -v.
+Execute tests based on markers pytest -m <marker_name> -v.
+Creating fixtures using @pytest.fixture.
+conftest.py allows accessing fixtures from multiple files.
+Parametrizing tests using @pytest.mark.parametrize.
+Xfailing tests using @pytest.mark.xfail.
+Skipping tests using @pytest.mark.skip.
+Stop test execution on n failures using pytest --maxfail = <num>.
+Running tests in parallel using pytest -n <num>.
+Generating results xml using pytest -v --junitxml = "result.xml".
+Generating results html using pytest -v --html = "result.html".
+
+##########################################################################################################
